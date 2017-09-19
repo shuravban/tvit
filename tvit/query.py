@@ -44,10 +44,15 @@ class Query:
     def query(self):
         try:
             rst = self.api.request(self.endpoint, self.params)
+
             if rst.text.startswith('{"errors":'):
                 err = rst.json()['errors'][0]
                 raise TTwitterError('[%s]: %s' % (err['code'], err['message']))
             return rst
+
+        # ???
+        except TTwitterError as e:
+            raise e from None
 
         except T.TwitterRequestError as e:
             raise(TRequestError(*e.args)) from None
