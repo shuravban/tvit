@@ -4,7 +4,9 @@ import os
 RCFILE=os.path.join(os.environ['HOME'], '.trc')
 
 
-def keys(rcfile=RCFILE, user=None):
+def keys(user=None, rcfile=None):
+    if not rcfile:
+        rcfile = RCFILE
     rc = open(rcfile).read()
 
     if not user:
