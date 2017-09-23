@@ -28,6 +28,27 @@ class Query:
         self.params = params
         self.api = T.TwitterAPI(*keys.keys(user, rcfile))
         self.times = times
+        self.stop, self.cursor, self.response = self.get_first()
+
+    def get_first():
+        r = self.timed_query().json()
+        if type(r) == list:
+            return True, 0, r
+        elif type(r) == dict:
+            # errors should be catched in query
+            if not 'cursor' in r:
+                return True, 0, (r,)
+            else: # 'cursor' in r TODO change logic
+                return False, r['cursor'], list(r.get_iterator())
+        else: # impossible
+            raise Exception('Type of response is not list or dict')
+
+    def __next__(self):
+        if self.stop:
+            raise StopIteration
+
+    def __iter__(self):
+        return self
 
     def timed_query(self):
     # try execute the query and sleep 2^i seconds after Connection Error
@@ -73,6 +94,4 @@ if __name__ == '__main__':
     e = 'account/verify_credentials'
     p = {}
     q = Query(e,p)
-    L.info('start: ' + time.asctime())
-    r = q.timed_query()
-    print(r.json())
+    r = list(q)

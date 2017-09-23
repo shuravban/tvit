@@ -1,7 +1,8 @@
 # Oh! Not. It was the default file from github.
 *.swp
 .gitmodules
-TwitterAPI
+TwitterAPI/
+work/
 
 # NOT MY
 # Byte-compiled / optimized / DLL files
